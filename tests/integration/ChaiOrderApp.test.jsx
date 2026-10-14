@@ -1,30 +1,47 @@
-import { http, HttpResponse } from 'msw'
-import { setupServer } from 'msw/node'
-import { render, screen } from '@testing-library/react'
-import { fireEvent } from '@testing-library/dom'
-import ChaiOrderApp from '../../src/components/ChaiOrderApp'
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { beforeAll, afterAll, afterEach, test, expect } from "vitest";
+import ChaiOrderApp from "../../src/components/ChaiOrderApp";
 
 const server = setupServer(
-  http.get('/api/user', () => HttpResponse.json({ name: 'Zahra' }))
-)
+  http.get("*/api/hello", () => {
+    return HttpResponse.json({ name: "Zahra" });
+  }),
+);
 
-beforeAll(() => server.listen())
-afterAll(() => server.close())
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "error" });
+});
 
-test('complete chai ordering flow: add chai and place order', async () => {
-  // Arrange: render the full app
-  render(<ChaiOrderApp />)
-  
-  // Act: user adds chai
-  fireEvent.click(screen.getByText('Add Chai'))
-  fireEvent.click(screen.getByText('Add Chai'))
-  
-  // Assert: order count should be 2
-  expect(screen.getByText('🫖 Orders: 2')).toBeDefined()
-  
-  // Act: user places order
-  fireEvent.click(screen.getByText('Place Order'))
-  
-  // Assert: confirmation message appears
-  expect(await screen.findByText('Salam, Zahra! Your 2 chai order has been received.')).toBeDefined()
-})
+afterEach(() => {
+  server.resetHandlers();
+});
+
+afterAll(() => {
+  server.close();
+});
+
+test("complete chai ordering flow: add chai and place order", async () => {
+  render(<ChaiOrderApp />);
+
+  fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
+  fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
+
+  expect(screen.getByLabelText("2 cups")).toBeDefined();
+  expect(screen.getByText("cups")).toBeDefined();
+
+  fireEvent.click(screen.getByRole("button", { name: /place your order/i }));
+
+  expect(
+    await screen.findByRole("heading", { name: "Salam, Zahra!" }),
+  ).toBeDefined();
+
+  expect(screen.getByText(/your order of/i)).toBeDefined();
+
+  expect(screen.getByText(/2 cups of chai/i)).toBeDefined();
+
+  await waitFor(() => {
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+});

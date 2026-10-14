@@ -1,10 +1,5 @@
-import Link from "next/link";
+import ChaiOrderApp from '../components/ChaiOrderApp'
 
 export default function Home() {
-  return (
-    <div>
-      <h1>Home</h1>
-      <Link href="/about">About</Link>
-    </div>
-  );
+  return <ChaiOrderApp />
 }

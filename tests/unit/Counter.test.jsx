@@ -1,37 +1,35 @@
-import { render, screen } from '@testing-library/react'
-import { fireEvent } from '@testing-library/dom'
-import ChaiCounter from '../../src/components/Counter'
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, test, expect, vi } from "vitest";
+import ChaiCounter from "../../src/components/Counter";
 
-test('increments chai order count when Add Chai is clicked', () => {
-  // Arrange: put it on the screen
-  const onPlaceOrder = vi.fn()
-  render(<ChaiCounter onPlaceOrder={onPlaceOrder} />)
-  
-  // Act: do what the user does
-  fireEvent.click(screen.getByText('Add Chai'))
-  
-  // Assert: check what the user sees
-  expect(screen.getByText('🫖 Orders: 1')).toBeDefined()
-})
+describe("ChaiCounter", () => {
+  test("adds a cup of chai", () => {
+    render(<ChaiCounter onPlaceOrder={vi.fn()} />);
 
-test('calls onPlaceOrder when Place Order is clicked', () => {
-  // Arrange: put it on the screen with some orders
-  const onPlaceOrder = vi.fn()
-  render(<ChaiCounter onPlaceOrder={onPlaceOrder} />)
-  
-  // Act: add chai then place order
-  fireEvent.click(screen.getByText('Add Chai'))
-  fireEvent.click(screen.getByText('Place Order'))
-  
-  // Assert: callback was called with order count
-  expect(onPlaceOrder).toHaveBeenCalledWith(1)
-})
+    fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
 
-test('Place Order button is disabled when count is 0', () => {
-  // Arrange: put it on the screen
-  render(<ChaiCounter onPlaceOrder={vi.fn()} />)
-  
-  // Assert: Place Order button should be disabled
-  const placeOrderButton = screen.getByText('Place Order')
-  expect(placeOrderButton.disabled).toBe(true)
-})
+    expect(screen.getByLabelText("1 cup")).toBeDefined();
+    expect(screen.getByText("cup")).toBeDefined();
+  });
+
+  test("places the chai order", () => {
+    const placeOrder = vi.fn();
+
+    render(<ChaiCounter onPlaceOrder={placeOrder} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
+    fireEvent.click(screen.getByRole("button", { name: /place your order/i }));
+
+    expect(placeOrder).toHaveBeenCalledWith(1);
+  });
+
+  test("cannot place an empty order", () => {
+    render(<ChaiCounter onPlaceOrder={vi.fn()} />);
+
+    const button = screen.getByRole("button", {
+      name: /place your order/i,
+    });
+
+    expect(button.disabled).toBe(true);
+  });
+});
