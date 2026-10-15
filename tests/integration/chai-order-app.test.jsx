@@ -27,6 +27,7 @@ test("complete chai ordering flow: add chai and place order", async () => {
 
   fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
   fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
+  // fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
 
   expect(screen.getByLabelText("2 cups")).toBeDefined();
   expect(screen.getByText("cups")).toBeDefined();
