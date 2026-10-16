@@ -1,35 +1,55 @@
+// Unit test: we show one small component on screen and click it.
 import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, test, expect, vi } from "vitest";
-import ChaiCounter from "../../src/components/ChaiCounter";
+import { describe, test, expect } from "vitest";
+import Counter from "../../src/components/Counter";
 
-describe("ChaiCounter", () => {
-  test("adds a cup of chai", () => {
-    render(<ChaiCounter onPlaceOrder={vi.fn()} />);
+describe("Counter", () => {
+  test("starts at zero", () => {
+    render(<Counter />);
 
-    fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
-
-    expect(screen.getByLabelText("1 cup")).toBeDefined();
-    expect(screen.getByText("cup")).toBeDefined();
+    expect(screen.getByText("Count: 0")).toBeDefined();
   });
 
-  test("places the chai order", () => {
-    const placeOrder = vi.fn();
+  test("counts up when clicked", () => {
+    render(<Counter />);
 
-    render(<ChaiCounter onPlaceOrder={placeOrder} />);
+    fireEvent.click(screen.getByRole("button"));
 
-    fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
-    fireEvent.click(screen.getByRole("button", { name: /place your order/i }));
-
-    expect(placeOrder).toHaveBeenCalledWith(1);
+    expect(screen.getByText("Count: 1")).toBeDefined();
   });
 
-  test("cannot place an empty order", () => {
-    render(<ChaiCounter onPlaceOrder={vi.fn()} />);
+  test("counts up to three after three clicks", () => {
+    render(<Counter />);
 
-    const button = screen.getByRole("button", {
-      name: /place your order/i,
-    });
+    const button = screen.getByRole("button");
+    fireEvent.click(button);
+    fireEvent.click(button);
+    fireEvent.click(button);
 
-    expect(button.disabled).toBe(true);
+    expect(screen.getByText("Count: 3")).toBeDefined();
   });
+});
+test("starts at zero", () => {
+  render(<Counter />);
+
+  expect(screen.getByText("Count: 0")).toBeDefined();
+});
+
+test("counts up when clicked", () => {
+  render(<Counter />);
+
+  fireEvent.click(screen.getByRole("button"));
+
+  expect(screen.getByText("Count: 1")).toBeDefined();
+});
+
+test("counts up to three after three clicks", () => {
+  render(<Counter />);
+
+  const button = screen.getByRole("button");
+  fireEvent.click(button);
+  fireEvent.click(button);
+  fireEvent.click(button);
+
+  expect(screen.getByText("Count: 3")).toBeDefined();
 });
