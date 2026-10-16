@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Coffee } from "lucide-react";
-import Counter from "./Counter";
-import Greeting from "./Greeting";
+import ChaiCounter from "./ChaiCounter";
+import AfghaniGreeting from "./AfghaniGreeting";
 
 export default function ChaiOrderApp() {
   const [orderCount, setOrderCount] = useState(0);
@@ -23,8 +23,8 @@ export default function ChaiOrderApp() {
         </p>
 
         <div className="my-6 border-t border-amber-100" />
-        <Counter onPlaceOrder={setOrderCount} />
-        <Greeting orderCount={orderCount} />
+        <ChaiCounter onPlaceOrder={setOrderCount} />
+        <AfghaniGreeting orderCount={orderCount} />
         <p className="mt-6 text-xs text-stone-400">Made with warmth and love</p>
       </section>
     </main>

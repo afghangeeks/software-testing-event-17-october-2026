@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Coffee, Plus, ArrowRight } from 'lucide-react'
 
-export default function Counter({ onPlaceOrder }) {
+export default function ChaiCounter({ onPlaceOrder }) {
   const [count, setCount] = useState(0)
 
   const addChai = () => setCount((previous) => previous + 1)

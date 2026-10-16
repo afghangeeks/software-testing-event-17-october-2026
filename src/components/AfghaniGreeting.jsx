@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CheckCircle } from "lucide-react";
 
-export default function Greeting({ orderCount }) {
+export default function AfghaniGreeting({ orderCount }) {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
