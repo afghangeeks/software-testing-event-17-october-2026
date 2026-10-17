@@ -14,6 +14,14 @@ describe("add", () => {
   it("adds a positive and a negative number", () => {
     expect(add(2, -3)).toBe(-1);
   });
+
+  it("handles numeric strings correctly", () => {
+    expect(add("2", 3)).toBe(5);
+  });
+
+  it("rejects strings", () => {
+    expect(() => add("2", 3)).toThrow();
+  });
 });
 
 describe("isEven", () => {
