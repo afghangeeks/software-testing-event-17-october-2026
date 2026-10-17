@@ -25,6 +25,7 @@ describe("Counter", () => {
     fireEvent.click(button);
     fireEvent.click(button);
     fireEvent.click(button);
+    
 
     expect(screen.getByText("Count: 3")).toBeDefined();
   });

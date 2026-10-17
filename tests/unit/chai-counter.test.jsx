@@ -25,6 +25,7 @@ describe("ChaiCounter", () => {
     render(<ChaiCounter onPlaceOrder={placeOrder} />);
 
     fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
+    // fireEvent.click(screen.getByRole("button", { name: /add chai/i }));
     fireEvent.click(screen.getByRole("button", { name: /place your order/i }));
 
     expect(placeOrder).toHaveBeenCalledWith(1);

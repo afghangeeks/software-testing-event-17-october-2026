@@ -1,40 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Test with Confidence
 
-## Getting Started
+The example project for **Test with Confidence**, an Afghan Geeks Education community event on 17 October 2026.
 
-First, run the development server:
+It's a small Next.js app called **Chai Time**, tested at every level: unit, component, integration, and end-to-end.
+
+## Getting started
+
+You need [Node.js](https://nodejs.org) 22.12 or later.
 
 ```bash
+git clone https://github.com/afghangeeks/software-testing-event-17-october-2026
+cd software-testing-event-17-october-2026
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Running the tests
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+| Command | What it does |
+| --- | --- |
+| `npm run test` | Runs the unit and integration tests in watch mode, re-running on every save |
+| `npx vitest run` | Runs them once |
+| `npx vitest run --coverage` | Shows which lines are never tested |
+| `npm run test:e2e` | Runs the end-to-end test in a real browser |
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+Before your first end-to-end run, download the browser once (about 120 MB):
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npx playwright install chromium
+```
 
-## Learn More
+The end-to-end test builds the app and starts it on port 3100, so it won't clash with `npm run dev`.
 
-To learn more about Next.js, take a look at the following resources:
+## What's inside
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+| Level | Test | What it shows |
+| --- | --- | --- |
+| Unit | [`tests/unit/math.test.js`](tests/unit/math.test.js) | Testing simple functions: `add` and `isEven` |
+| Unit | [`tests/unit/bread.test.js`](tests/unit/bread.test.js) | Normal, zero, and negative cases |
+| Component | [`tests/unit/Counter.test.jsx`](tests/unit/Counter.test.jsx) | Render, click, and check the screen |
+| Component | [`tests/unit/chai-counter.test.jsx`](tests/unit/chai-counter.test.jsx) | Props, fake functions with `vi.fn()`, and a disabled button |
+| Component | [`tests/unit/page.test.jsx`](tests/unit/page.test.jsx) | The home page renders |
+| Integration | [`tests/integration/chai-order-app.test.jsx`](tests/integration/chai-order-app.test.jsx) | The full order flow, with [MSW](https://mswjs.io) faking the API |
+| End-to-end | [`tests/e2e/chai-order.spec.js`](tests/e2e/chai-order.spec.js) | The same flow in a real browser, with the real API |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Notice the greeting: the integration test says "Salam, Zahra!" because MSW fakes the API, while the end-to-end test says "Salam, Ali!" because it calls the real `/api/hello` route.
 
-## Deploy on Vercel
+## Try it yourself
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Break `add` on purpose.** There's a commented-out broken version in [`src/utils/math.js`](src/utils/math.js). Swap it in and watch the tests turn red.
+- **Settle an argument.** Two tests in `math.test.js` disagree about `add("2", 3)`: one expects `5`, the other expects an error. Decide which behaviour is right and make the suite green.
+- **Test the unhappy path.** Write an integration test for what the greeting shows when the API fails. Hint: `server.use()` in MSW.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## Tools
+
+- [Vitest](https://vitest.dev): test runner
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro): finds elements the way users do, by role and label
+- [MSW](https://mswjs.io): fakes the network, not your code
+- [Playwright](https://playwright.dev): runs end-to-end tests in a real browser
+- [Next.js testing guides](https://nextjs.org/docs/pages/guides/testing): how these tools fit into Next.js

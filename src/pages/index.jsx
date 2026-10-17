@@ -1,5 +1,11 @@
-import ChaiOrderApp from '../components/ChaiOrderApp'
+import ChaiOrderApp from "../components/ChaiOrderApp";
+import Counter from "../components/Counter";
 
 export default function Home() {
-  return <ChaiOrderApp />
+  return (
+    <>
+      <Counter />
+      <ChaiOrderApp />
+    </>
+  );
 }
